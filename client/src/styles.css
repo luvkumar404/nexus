@@ -29,3 +29,202 @@ input, button, select, textarea {
 .focus-ring {
   @apply focus:outline-none focus:ring-2 focus:ring-nexus focus:ring-offset-2 dark:focus:ring-offset-slate-950;
 }
+
+.audit-dashboard .focus-ring:focus {
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #087f75;
+}
+
+html:not(.dark):has(.audit-dashboard) {
+  color-scheme: light;
+  background: #f6f8fb;
+}
+
+body:has(.audit-dashboard) {
+  background: #f6f8fb;
+  color: #111827;
+  scrollbar-color: #cbd5e1 #f6f8fb;
+  scrollbar-width: thin;
+}
+
+body:has(.audit-dashboard)::-webkit-scrollbar {
+  width: 10px;
+}
+
+body:has(.audit-dashboard)::-webkit-scrollbar-track {
+  background: #f6f8fb;
+}
+
+body:has(.audit-dashboard)::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border: 2px solid #f6f8fb;
+  border-radius: 8px;
+}
+
+html.dark:has(.audit-dashboard) {
+  color-scheme: dark;
+  background: #0f172a;
+}
+
+.dark body:has(.audit-dashboard) {
+  background: #0f172a;
+  color: #e5edf7;
+  scrollbar-color: #475569 #0f172a;
+}
+
+.dark body:has(.audit-dashboard)::-webkit-scrollbar-track {
+  background: #0f172a;
+}
+
+.dark body:has(.audit-dashboard)::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-color: #0f172a;
+}
+
+.dark .audit-dashboard,
+.dark .audit-dashboard[class~="bg-[#f6f8fb]"] {
+  background: #0f172a;
+  color: #e5edf7;
+}
+
+.dark .audit-dashboard .bg-white {
+  background-color: #111827;
+}
+
+.dark .audit-dashboard [class~="bg-[#f8fafc]"] {
+  background-color: #1e293b;
+}
+
+.dark .audit-dashboard [class~="bg-[#e6f7f5]"] {
+  background-color: #134e4a;
+}
+
+.dark .audit-dashboard [class~="text-[#111827]"] {
+  color: #f1f5f9;
+}
+
+.dark .audit-dashboard [class~="text-[#526176]"] {
+  color: #cbd5e1;
+}
+
+.dark .audit-dashboard [class~="text-[#718096]"] {
+  color: #94a3b8;
+}
+
+.dark .audit-dashboard [class~="text-[#087f75]"] {
+  color: #5eead4;
+}
+
+.dark .audit-dashboard [class~="border-[#dfe5ec]"],
+.dark .audit-dashboard [class~="border-[#cbd5e1]"] {
+  border-color: #334155;
+}
+
+.dark .audit-dashboard [class~="divide-[#dfe5ec]"] > :not([hidden]) ~ :not([hidden]) {
+  border-color: #334155;
+}
+
+.dark .audit-dashboard [class~="hover:bg-[#f8fafc]"]:hover {
+  background-color: #1e293b;
+}
+
+.dark .audit-dashboard [class~="hover:border-[#cbd5e1]"]:hover {
+  border-color: #475569;
+}
+
+.dark .audit-dashboard .bg-slate-100 {
+  background-color: #334155;
+}
+
+.dark .audit-dashboard .text-slate-700 {
+  color: #e2e8f0;
+}
+
+.dark .audit-dashboard .bg-emerald-100 {
+  background-color: #064e3b;
+}
+
+.dark .audit-dashboard .text-emerald-700,
+.dark .audit-dashboard .text-emerald-800 {
+  color: #a7f3d0;
+}
+
+.dark .audit-dashboard .bg-amber-100 {
+  background-color: #451a03;
+}
+
+.dark .audit-dashboard .text-amber-700,
+.dark .audit-dashboard .text-amber-800 {
+  color: #fde68a;
+}
+
+.dark .audit-dashboard .bg-rose-100 {
+  background-color: #4c0519;
+}
+
+.dark .audit-dashboard .text-rose-700,
+.dark .audit-dashboard .text-rose-800 {
+  color: #fecdd3;
+}
+
+.dark .audit-dashboard .bg-blue-100 {
+  background-color: #172554;
+}
+
+.dark .audit-dashboard .text-blue-700 {
+  color: #bfdbfe;
+}
+
+.dark .audit-dashboard .bg-orange-100 {
+  background-color: #431407;
+}
+
+.dark .audit-dashboard .text-orange-800 {
+  color: #fed7aa;
+}
+
+.dark .audit-dashboard .text-slate-200 {
+  color: #334155;
+}
+
+.dark .audit-dashboard .focus-ring:focus {
+  box-shadow: 0 0 0 2px #111827, 0 0 0 4px #2dd4bf;
+}
+
+.dark .audit-dashboard .audit-sidebar-scrollbar {
+  scrollbar-color: #475569 transparent;
+}
+
+.dark .audit-dashboard .audit-sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-color: #111827;
+}
+
+.audit-sidebar-scrollbar {
+  scrollbar-color: #cbd5e1 transparent;
+  scrollbar-width: thin;
+}
+
+.audit-sidebar-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.audit-sidebar-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.audit-sidebar-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .audit-dashboard *,
+  .audit-dashboard *::before,
+  .audit-dashboard *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

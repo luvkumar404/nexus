@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { auditApi } from '../api/auditApi';
 import { useAuditProgress } from '../hooks/useAuditProgress';
 import AuditProgress from '../components/AuditProgress';
 import ReportHeader from '../components/audit/ReportHeader';
+import AuditOverviewSummary from '../components/audit/AuditOverviewSummary';
 import AuditSummaryCards from '../components/audit/AuditSummaryCards';
 import AuditCategoryGrid from '../components/audit/AuditCategoryGrid';
 import HeadingStructure from '../components/audit/HeadingStructure';
@@ -12,11 +13,15 @@ import SocialMediaPreview from '../components/audit/SocialMediaPreview';
 import AuditSection from '../components/audit/AuditSection';
 import AuditSkeleton from '../components/audit/AuditSkeleton';
 import ScoreImprovementPlan from '../components/audit/ScoreImprovementPlan';
+import AuditDashboardSidebar from '../components/audit/AuditDashboardSidebar';
 
 export default function AuditReport() {
   const { auditId } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const status = useAuditProgress(auditId);
   const [report, setReport] = useState(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     auditApi.get(auditId)
@@ -29,27 +34,53 @@ export default function AuditReport() {
     const progressStatus = { ...report, ...status };
 
     return (
-      <main className="mx-auto max-w-[1100px] px-4 py-12">
-        <AuditProgress status={progressStatus} />
+      <main id="main-content" className="audit-dashboard min-h-screen bg-[#f6f8fb] px-4 py-12 text-[#111827] sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-4xl"><AuditProgress status={progressStatus} /></div>
       </main>
     );
   }
 
+  const categories = report.categories || [];
+  const requestedView = searchParams.get('view') || 'overview';
+  const selectedCategory = categories.find((category) => String(category.id) === requestedView);
+  const selectedId = selectedCategory ? String(selectedCategory.id) : 'overview';
+  const sectionTitle = selectedCategory?.name || 'Overview';
+
+  function selectSection(id) {
+    setSearchParams({ view: id });
+    setDrawerOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   return (
-    <main className="relative overflow-hidden bg-white dark:bg-slate-950">
-      <div className="pointer-events-none fixed inset-y-0 left-0 w-32 bg-[linear-gradient(#dbeafe_1px,transparent_1px),linear-gradient(90deg,#dbeafe_1px,transparent_1px)] bg-[size:24px_24px] opacity-45 dark:opacity-10" />
-      <div className="pointer-events-none fixed inset-y-0 right-0 w-32 bg-[linear-gradient(#dbeafe_1px,transparent_1px),linear-gradient(90deg,#dbeafe_1px,transparent_1px)] bg-[size:24px_24px] opacity-45 dark:opacity-10" />
-      <div className="relative mx-auto max-w-[1100px] space-y-8 px-4 py-8">
-        <ReportHeader report={report} auditId={auditId} />
-        <AuditSummaryCards summary={report.summary} />
-        <AuditCategoryGrid categories={report.categories || []} />
-        <ScoreImprovementPlan plan={report.scoreImprovementPlan || []} />
-        <HeadingStructure headings={report.headingStructure || {}} warnings={report.audit?.crawl?.headingWarnings || []} />
-        <SocialMediaPreview social={report.socialPreview || {}} />
-        <div className="space-y-6">
-          {(report.categories || []).map((category) => <AuditSection key={category.id} category={category} />)}
-        </div>
+    <div className="audit-dashboard min-h-screen bg-[#f6f8fb] text-[#111827]">
+      <AuditDashboardSidebar
+        report={report}
+        categories={categories}
+        selectedId={selectedId}
+        onSelect={selectSection}
+        collapsed={sidebarCollapsed}
+        onToggleCollapsed={() => setSidebarCollapsed((value) => !value)}
+        drawerOpen={drawerOpen}
+        onCloseDrawer={() => setDrawerOpen(false)}
+      />
+      <div className={`min-w-0 transition-[padding] duration-200 ${sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-[300px]'}`}>
+        <ReportHeader report={report} auditId={auditId} sectionTitle={sectionTitle} onOpenNavigation={() => { setSidebarCollapsed(false); setDrawerOpen(true); }} />
+        <main id="main-content" className="mx-auto w-full max-w-[1600px] px-4 py-5 sm:px-6 sm:py-6">
+          {selectedCategory ? (
+            <AuditSection category={selectedCategory} />
+          ) : (
+            <div className="space-y-6">
+              <AuditOverviewSummary report={report} />
+              <AuditSummaryCards summary={report.summary} />
+              <AuditCategoryGrid categories={categories} onSelect={selectSection} />
+              <ScoreImprovementPlan plan={report.scoreImprovementPlan || []} />
+              <HeadingStructure headings={report.headingStructure || {}} warnings={report.audit?.crawl?.headingWarnings || []} />
+              <SocialMediaPreview social={report.socialPreview || {}} />
+            </div>
+          )}
+        </main>
       </div>
-    </main>
+    </div>
   );
 }
