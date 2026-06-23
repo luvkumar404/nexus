@@ -1,11 +1,12 @@
 import { AUDIT_RULES } from '../config/auditRules.config.js';
 import { scoreAudit } from './scoring.service.js';
+import { generateRecommendation } from './recommendationGenerator.service.js';
 
 export async function runRulesEngine(context) {
   const ruleResults = [];
   for (const rule of AUDIT_RULES) {
     const output = await rule.run(context);
-    ruleResults.push({
+    const ruleResult = {
       ruleId: rule.id,
       categoryId: rule.category,
       ruleName: rule.name,
@@ -22,7 +23,9 @@ export async function runRulesEngine(context) {
       difficulty: output.difficulty || 'easy',
       source: output.source || 'html',
       confidence: output.confidence || 'high'
-    });
+    };
+    ruleResult.solution = generateRecommendation(ruleResult, context);
+    ruleResults.push(ruleResult);
   }
   return scoreAudit(ruleResults);
 }

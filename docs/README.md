@@ -9,6 +9,7 @@ This directory explains how the project works, how the audit engine is structure
 - [Audit Flow](./audit-flow.md)
 - [Rules and Scoring](./rules-and-scoring.md)
 - [Rule Count](./rule-count.md)
+- [Audit Rules and Solution Generation](./rule-solutions.md)
 - [Backend API](./backend-api.md)
 - [Frontend Report UI](./frontend-report-ui.md)
 - [Setup and Deployment](./setup-and-deployment.md)

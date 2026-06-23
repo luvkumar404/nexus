@@ -11,6 +11,7 @@ const ruleResultSchema = new mongoose.Schema({
   severity: { type: String, enum: ['critical', 'high', 'medium', 'low', 'info'], default: 'info' },
   message: String,
   recommendation: String,
+  solution: mongoose.Schema.Types.Mixed,
   evidence: mongoose.Schema.Types.Mixed,
   developerDetails: mongoose.Schema.Types.Mixed,
   affectedUrl: String,

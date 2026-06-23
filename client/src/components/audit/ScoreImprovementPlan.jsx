@@ -1,6 +1,6 @@
 import { Target } from 'lucide-react';
 
-export default function ScoreImprovementPlan({ plan = [] }) {
+export default function ScoreImprovementPlan({ plan = [], onNavigate }) {
   if (!plan.length) return null;
   return (
     <section className="rounded-lg border border-[#dfe5ec] bg-white p-4 sm:p-6">
@@ -17,17 +17,17 @@ export default function ScoreImprovementPlan({ plan = [] }) {
             <div className="flex items-start justify-between gap-3">
               <div>
                 <h3 className="font-semibold">{item.categoryName}</h3>
-                <p className="mt-1 text-sm text-[#526176]">Current {item.currentScore ?? 'NA'} | Target {item.targetScore ?? 'NA'}</p>
+                <p className="mt-1 text-sm text-[#526176]">Current {item.currentScore ?? 'NA'}{item.targetScore != null ? ` | Calculated potential ${item.targetScore}` : ''}</p>
                 <p className="mt-1 text-xs capitalize text-[#718096]">Difficulty: {item.difficulty}</p>
               </div>
-              <span className="rounded bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">{item.expectedScoreImpact}</span>
+              {item.expectedScoreImpact && <span title={item.scoreImpactExplanation} className="rounded bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">{item.expectedScoreImpact}</span>}
             </div>
             <ul className="mt-3 space-y-2 text-sm">
               {item.topFixes.map((fix) => (
                 <li key={fix.ruleId} className="rounded-md border border-[#dfe5ec] bg-[#f8fafc] p-3">
-                  <p className="font-medium">{fix.title}</p>
+                  <div className="flex items-start justify-between gap-3"><p className="font-medium">{fix.title}</p><button type="button" onClick={() => onNavigate?.(item.categoryId, fix.ruleId)} className="focus-ring shrink-0 rounded text-xs font-semibold text-[#087f75] hover:underline">View rule</button></div>
                   <p className="mt-1 break-words leading-6 text-[#526176]">{fix.recommendation}</p>
-                  <p className="mt-1 text-xs text-slate-500">Impact: {fix.impact} | Difficulty: {fix.difficulty}</p>
+                  <p className="mt-1 text-xs capitalize text-slate-500">Status: {fix.status} | Priority: {fix.priority || 'medium'} | Impact: {fix.impact} | Difficulty: {fix.difficulty}</p>
                 </li>
               ))}
             </ul>

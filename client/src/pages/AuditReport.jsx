@@ -52,6 +52,11 @@ export default function AuditReport() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  function navigateToRule(categoryId, ruleId) {
+    setSearchParams({ view: categoryId, rule: ruleId });
+    window.setTimeout(() => document.getElementById(`audit-rule-${ruleId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  }
+
   return (
     <div className="audit-dashboard min-h-screen bg-[#f6f8fb] text-[#111827]">
       <AuditDashboardSidebar
@@ -74,7 +79,7 @@ export default function AuditReport() {
               <AuditOverviewSummary report={report} />
               <AuditSummaryCards summary={report.summary} />
               <AuditCategoryGrid categories={categories} onSelect={selectSection} />
-              <ScoreImprovementPlan plan={report.scoreImprovementPlan || []} />
+              <ScoreImprovementPlan plan={report.scoreImprovementPlan || []} onNavigate={navigateToRule} />
               <HeadingStructure headings={report.headingStructure || {}} warnings={report.audit?.crawl?.headingWarnings || []} />
               <SocialMediaPreview social={report.socialPreview || {}} />
             </div>

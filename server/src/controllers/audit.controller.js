@@ -7,6 +7,8 @@ import CategoryResult from '../models/CategoryResult.js';
 import { runAudit, buildPreview } from '../services/crawler.service.js';
 import { buildAuditPdf } from '../services/pdf.service.js';
 import { fetchWebsiteHtml, getFetchDebugSummary } from '../services/fetchPage.service.js';
+import { attachRecommendations } from '../services/recommendationGenerator.service.js';
+import { buildScoreImprovementPlan } from '../services/scoreImprovement.service.js';
 
 function normalizeSocialPreview(socialPreview = {}, pageMetrics = {}) {
   const metaTags = socialPreview.metaTags || {};
@@ -53,6 +55,11 @@ export async function getAudit(req, res) {
     title: pageMetrics.title || pages[0]?.title || '',
     metaDescription: pageMetrics.metaDescription || pages[0]?.metaDescription || ''
   };
+  const categories = (auditObject.categories || []).map((category) => ({
+    ...category,
+    rules: attachRecommendations(category.rules || [])
+  }));
+  const hydratedRuleResults = attachRecommendations(ruleResults.map((rule) => rule.toObject()));
   res.json({
     ...auditObject,
     url: auditObject.url,
@@ -63,16 +70,16 @@ export async function getAudit(req, res) {
     grade: auditObject.grade,
     createdAt: auditObject.createdAt,
     summary: auditObject.summary,
-    categories: auditObject.categories || [],
+    categories,
     headingStructure: auditObject.headingStructure || {},
     socialPreview: normalizeSocialPreview(auditObject.socialPreview, fallbackPageMetrics),
     pageMetrics,
-    scoreImprovementPlan: auditObject.scoreImprovementPlan || [],
+    scoreImprovementPlan: categories.length ? buildScoreImprovementPlan(categories) : (auditObject.scoreImprovementPlan || []),
     audit: process.env.NODE_ENV === 'production' ? auditObject : { ...auditObject, debug },
     debug: process.env.NODE_ENV === 'production' ? undefined : debug,
     pages,
     issues,
-    ruleResults,
+    ruleResults: hydratedRuleResults,
     categoryResults
   });
 }
