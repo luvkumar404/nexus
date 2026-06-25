@@ -108,6 +108,7 @@ export async function getAuditPdf(req, res) {
   const buffer = await buildAuditPdf(audit);
   res.setHeader('Content-Type', 'application/pdf');
   res.setHeader('Content-Disposition', `attachment; filename="nexus-seo-audit-${audit._id}.pdf"`);
+  res.setHeader('Content-Length', buffer.length);
   res.send(buffer);
 }
 

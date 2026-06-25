@@ -6,6 +6,6 @@ export const auditApi = {
   status: (id) => api.get(`/crawler/status/${id}`),
   projectAudits: (projectId) => api.get(`/audits/project/${projectId}`),
   delete: (id) => api.delete(`/audits/${id}`),
-  pdfUrl: (id) => `${api.defaults.baseURL}/audits/${id}/pdf`,
+  downloadPdf: (id) => api.get(`/audits/${id}/pdf`, { responseType: 'blob' }),
   preview: (url) => api.post('/crawler/preview', { url })
 };
